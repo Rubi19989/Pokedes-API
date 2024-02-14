@@ -1,31 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Text } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getPokemonsApi, getPokemonDetailsByUrlApi } from '../api/pokemon';
+import PokemonList from '../components/Pokemon/PokemonList';
 
 const Pokedex = () => {
-
     const [pokemons, setPokemons] = useState([]);
-    console.log('pokemons---->', pokemons)
+    console.log('pokemons --->', pokemons);
 
     const loadPokemons = async () => {
         try {
             const response = await getPokemonsApi();
-
-            const pokemosArray = [];
-            for await (const pokemon of response.results) {
-                const pokemonDetalis = await getPokemonDetailsByUrlApi(pokemon.url)
-
-                pokemosArray.push({
-                    id: pokemonDetalis.id,
-                    name: pokemonDetalis.name,
-                    type: pokemonDetalis.type[0].type.name,
-                    order: pokemonDetalis.order,
-                    imagen: pokemonDetalis.sprites.other['official-artwork'].front_default
-                })
-            }
-
-            setPokemons([...pokemons, ...pokemosArray]);
+            const pokemonPromises = response.results.map(pokemon => getPokemonDetailsByUrlApi(pokemon.url));
+            const pokemonDetails = await Promise.all(pokemonPromises);
+            const formattedPokemons = pokemonDetails.map(pokemon => ({
+                id: pokemon.id,
+                name: pokemon.name,
+                type: pokemon.types[0].type.name,
+                order: pokemon.order,
+                image: pokemon.sprites.other['official-artwork'].front_default,
+            }));
+            setPokemons(formattedPokemons);
         } catch (error) {
             console.log(error);
         }
@@ -37,7 +31,7 @@ const Pokedex = () => {
 
     return (
         <SafeAreaView>
-            <Text>Pokedex</Text>
+            <PokemonList pokemons={pokemons}/>
         </SafeAreaView>
     );
 };

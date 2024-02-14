@@ -11,16 +11,11 @@ export const getPokemonsApi = async () => {
     }
 };
 
-
-export const getPokemonDetailsByUrlApi = async () => {
+export const getPokemonDetailsByUrlApi = async (url) => {
     try {
-        const response  = await fetch(url);
-        const result  = await response.json();
-
-        return result;
-    } catch (error) {
-        throw error
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {a
+        throw error;
     }
-
-
-}
+};
