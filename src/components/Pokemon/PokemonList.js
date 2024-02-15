@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import PokemonCard from './PokemonCard';
 
 

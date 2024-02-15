@@ -1,44 +1,71 @@
 import React from 'react';
 import { Text, View, Image, Pressable, StyleSheet } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
+import getColorByPokemonType from '../../utils/getColorByPokemonType';
 
 
 const PokemonCard = (props) => {
 
     const { pokemon } = props
 
-    const goToPokemos = () => {
+    const bgStyles = { backgroundColor:  '#f0f'  }
+
+    const goToPokemon = () => {
         console.log(`Vamos al pokemon: ${pokemon.name}`)
     }
+
     const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            marginTop: 80,
+        },
         card: {
             flex: 1,
-            backgroundColor: "#a4d1b3",
-            margin: 8,
-            borderRadius: 20,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: 20,
-            padding: 10,
-            minWidth: 100, 
+            height: 130
+        },
+        spacing: {
+            flex: 1,
+            padding: 5
+        },
+        bgCard: {
+            backgroundColor: "grey"
         },
         image: {
-            width: '40%',
-            aspectRatio: 1, 
-            borderRadius: 50, 
+            position: "absolute",
+            bottom: 2,
+            right: 2,
+            width: 90,
+            height: 90
         },
-        text: {
-            textAlign: 'center', 
-            marginTop: 5, 
+        name: {
+            color: "#fff",
+            paddingTop: 10,
+            fontSize: 15,
+            fontWeight: "bold",
+        },
+        number: {
+            position: "absolute",
+            top: 10,
+            right: 10,
+            fontSize: 11,
+            color: "#fff"
         }
     });
 
     return (
-        <Pressable onPress={goToPokemos}>
-            <View style={styles.card} >
-                <Text>{pokemon.name}</Text>
-                <Image source={{ uri: pokemon.image }} style={styles.image} />
-            </View>
-        </Pressable>
+        <View style={styles.container}>
+            <Pressable onPress={goToPokemon}>
+                <SafeAreaView style={styles.card}>
+                    <SafeAreaView style={styles.spacing}>
+                        <SafeAreaView style={styles.bgCard}>
+                            <Text style={styles.number}>#{`${pokemon.order}`.padStart(3, 0)}</Text>
+                            <Text style={styles.name}>{pokemon.name}</Text>
+                            <Image source={{ uri: pokemon.image }} style={styles.image} />
+                        </SafeAreaView>
+                    </SafeAreaView>
+                </SafeAreaView>
+            </Pressable>
+        </View>
     );
 
 
