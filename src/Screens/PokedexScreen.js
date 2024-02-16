@@ -5,11 +5,13 @@ import PokemonList from '../components/Pokemon/PokemonList';
 
 const Pokedex = () => {
     const [pokemons, setPokemons] = useState([]);
+    const [nextUrl, setNextUrl] = useState(null)
     console.log('pokemons --->', pokemons);
 
     const loadPokemons = async () => {
         try {
-            const response = await getPokemonsApi();
+            const response = await getPokemonsApi(nextUrl);
+            setNextUrl(response.next)
             const pokemonPromises = response.results.map(pokemon => getPokemonDetailsByUrlApi(pokemon.url));
             const pokemonDetails = await Promise.all(pokemonPromises);
             const formattedPokemons = pokemonDetails.map(pokemon => ({
@@ -31,7 +33,7 @@ const Pokedex = () => {
 
     return (
         <SafeAreaView>
-            <PokemonList pokemons={pokemons}/>
+            <PokemonList pokemons={pokemons} loadPokemons={loadPokemons}/>
         </SafeAreaView>
     );
 };

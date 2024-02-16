@@ -1,74 +1,68 @@
-import React from 'react';
-import { Text, View, Image, Pressable, StyleSheet } from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
-import getColorByPokemonType from '../../utils/getColorByPokemonType';
+import React from "react";
+import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import { capitalize } from "lodash";
+import getColorByPokemonType from "../../utils/getColorByPokemonType";
 
-
-const PokemonCard = (props) => {
-
-    const { pokemon } = props
-
-    const bgStyles = { backgroundColor:  '#f0f'  }
-
-    const goToPokemon = () => {
-        console.log(`Vamos al pokemon: ${pokemon.name}`)
-    }
+export default function PokemonCard(props) {
+    const { pokemon } = props;
 
     const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            marginTop: 80,
-        },
         card: {
             flex: 1,
-            height: 130
+            height: 130,
         },
-        spacing: {
+        content: {
             flex: 1,
-            padding: 5
+            padding: 5,
         },
-        bgCard: {
-            backgroundColor: "grey"
+        bgStyles: {
+            flex: 1,
+            borderRadius: 15,
+            padding: 10,
+        },
+        number: {
+            position: "absolute",
+            right: 10,
+            top: 10,
+            color: "#fff",
+            fontSize: 11,
+        },
+        name: {
+            color: "#fff",
+            fontWeight: "bold",
+            fontSize: 15,
+            paddingTop: 10,
         },
         image: {
             position: "absolute",
             bottom: 2,
             right: 2,
             width: 90,
-            height: 90
+            height: 90,
         },
-        name: {
-            color: "#fff",
-            paddingTop: 10,
-            fontSize: 15,
-            fontWeight: "bold",
-        },
-        number: {
-            position: "absolute",
-            top: 10,
-            right: 10,
-            fontSize: 11,
-            color: "#fff"
-        }
     });
 
+    const pokemonColor = getColorByPokemonType(pokemon.type);
+    const bgStyles = { backgroundColor: pokemonColor, ...styles.bgStyles };
+
+    const goToPokemon = () => {
+        console.log(`Vamos al pokemon: ${pokemon.name}`);
+        console.log(pokemon);
+    };
+
     return (
-        <View style={styles.container}>
-            <Pressable onPress={goToPokemon}>
-                <SafeAreaView style={styles.card}>
-                    <SafeAreaView style={styles.spacing}>
-                        <SafeAreaView style={styles.bgCard}>
-                            <Text style={styles.number}>#{`${pokemon.order}`.padStart(3, 0)}</Text>
-                            <Text style={styles.name}>{pokemon.name}</Text>
-                            <Image source={{ uri: pokemon.image }} style={styles.image} />
-                        </SafeAreaView>
-                    </SafeAreaView>
-                </SafeAreaView>
-            </Pressable>
-        </View>
+        <Pressable onPress={goToPokemon} style={styles.card}>
+            {({ pressed }) => (
+                <View style={[styles.content, pressed && { opacity: 0.5 }]}>
+                    <View style={bgStyles}>
+                        <Text style={styles.number}>
+                            #{`${pokemon.order}`.padStart(3, 0)}
+                        </Text>
+                        <Text style={styles.name}>{capitalize(pokemon.name)}</Text>
+                        <Image source={{ uri: pokemon.image }} style={styles.image} />
+                    </View>
+                </View>
+            )}
+        </Pressable>
     );
-
-
 }
-
-export default PokemonCard;
